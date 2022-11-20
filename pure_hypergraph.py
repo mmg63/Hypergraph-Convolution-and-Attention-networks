@@ -258,3 +258,5 @@ if __name__ == '__main__':
                     .format(trial, epoch_best,val_best,test_best), dpi=300)
         # plt.show()
         # ------------------------------------------------------------------------
+
+# %%
