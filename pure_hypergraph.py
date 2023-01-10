@@ -1,3 +1,4 @@
+#%% 
 import torch
 from torch_geometric.datasets import Planetoid
 import numpy as np
@@ -10,6 +11,8 @@ from torch_geometric.utils import degree
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
+#--------------------------------------------------------------------
+#%% 
 def generate_H_from_adjacency(data_graph, k_adjacent_distance=1):
     #  create Hyperedge longtensor matrix
     temphyperedge = np.ndarray((2708, 2708))
@@ -24,6 +27,8 @@ def generate_H_from_adjacency(data_graph, k_adjacent_distance=1):
 
     return hyperedge
 
+#--------------------------------------------------------------------
+#%% 
 def preprocess_features(features):
     """Row-normalize feature matrix and convert to tuple representation"""
     rowsum = np.array(features.sum(1))  # sum os each paper citation mustafa
@@ -44,7 +49,8 @@ def parse_index_file(filename):
         index.append(int(line.strip()))
     return index
 
-
+#--------------------------------------------------------------------
+#%% 
 def load_citation_data():
 
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
@@ -91,10 +97,6 @@ def load_citation_data():
             degree[i] = len(edge_list[i])
     # -----------------------------------------
 
-    # max_deg = max(degree)
-    # mean_deg = sum(degree) / len(degree)
-    # print(f'max degree: {max_deg}, mean degree:{mean_deg}')
-
     labels = np.vstack((ally, ty))
     labels[test_idx_reorder, :] = labels[test_idx_range, :]  # one-hot labels
     n_sample = labels.shape[0]
@@ -111,6 +113,8 @@ def load_citation_data():
     return sparse_H, H, ally
 
 
+#--------------------------------------------------------------------
+#%% 
 class GAT_Net_Class(torch.nn.Module):
     def __init__(self):
         super(GAT_Net_Class, self).__init__()
@@ -161,6 +165,8 @@ class Hyper_Attention_Class(torch.nn.Module):
         x = self.hconv2(x, data.edge_index)
         return F.log_softmax(x, dim=1)
 
+#--------------------------------------------------------------------
+#%% 
 if __name__ == '__main__':
     random.seed(10000009)
 
@@ -192,6 +198,9 @@ if __name__ == '__main__':
     # create table for plot accuracies
     plotvalues = np.zeros((number_of_epochs, 4))
 
+    
+    #--------------------------------------------------------------------
+    #%% 
     for trial in range(1, number_of_trials):
         # find the best accuracies during execution
         train_best = 0
@@ -249,3 +258,5 @@ if __name__ == '__main__':
                     .format(trial, epoch_best,val_best,test_best), dpi=300)
         # plt.show()
         # ------------------------------------------------------------------------
+
+# %%
